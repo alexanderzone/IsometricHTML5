@@ -319,7 +319,6 @@ floor.canvas.onclick=function(e) {
 
 var beltKeys=[49,50,51,52,53,54,55,56,57,48], pressedKeys = [];
 
-
 window.onkeydown=function(e){
     var beltIndex = beltKeys.indexOf(e.keyCode);
     if(beltIndex>=0){
@@ -351,23 +350,23 @@ setInterval(function() {
 
     if (pressedKeys[87]) {
         console.log("w pressed");
-        hero.to_y=hero.to_y - 60;
-        hero.to_x=hero.to_x - 60;
+        hero.to_y=hero.y - 60;
+        hero.to_x=hero.x - 60;
     }
     if (pressedKeys[65]) {
         console.log("a pressed");
-        hero.to_y=hero.to_y + 60;
-        hero.to_x=hero.to_x - 60;
+        hero.to_y=hero.y + 60;
+        hero.to_x=hero.x - 60;
     }
     if (pressedKeys[83]) {
         console.log("s pressed");
-        hero.to_y=hero.to_y + 60;
-        hero.to_x=hero.to_x + 60;
+        hero.to_y=hero.y + 60;
+        hero.to_x=hero.x + 60;
     }
     if (pressedKeys[68]) {
         console.log("d pressed");
-        hero.to_y=hero.to_y - 60;
-        hero.to_x=hero.to_x + 60;
+        hero.to_y=hero.y - 60;
+        hero.to_x=hero.x + 60;
     }
 
     hero.nextStep();
