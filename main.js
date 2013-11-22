@@ -348,26 +348,30 @@ var showMap=false;
 setInterval(function() {
     if(imageCount>0) return;
 
+    var newherox = hero.x, newheroy = hero.y;
     if (pressedKeys[87]) {
         console.log("w pressed");
-        hero.to_y=hero.y - 60;
-        hero.to_x=hero.x - 60;
+        newheroy=newheroy - 60;
+        newherox=newherox - 60;
     }
     if (pressedKeys[65]) {
         console.log("a pressed");
-        hero.to_y=hero.y + 60;
-        hero.to_x=hero.x - 60;
+        newheroy=newheroy + 60;
+        newherox=newherox - 60;
     }
     if (pressedKeys[83]) {
         console.log("s pressed");
-        hero.to_y=hero.y + 60;
-        hero.to_x=hero.x + 60;
+        newheroy=newheroy + 60;
+        newherox=newherox + 60;
     }
     if (pressedKeys[68]) {
         console.log("d pressed");
-        hero.to_y=hero.y - 60;
-        hero.to_x=hero.x + 60;
+        newheroy=newheroy - 60;
+        newherox=newherox + 60;
     }
+
+    hero.to_y = newheroy;
+    hero.to_x = newherox;
 
     hero.nextStep();
     for(var i in monsters) monsters[i].nextStep();
