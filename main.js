@@ -250,13 +250,13 @@ var monsterMap={
     }
 };
 
-var hero=new HeroBarbarian(s*4,s*3);
+hero=new HeroBarbarian(s*4,s*3);
 setInterval(function(){
     hero.health=Math.min(hero.health+10, hero.origin_health);
 },2000);
 
 // aggresive mobs
-var monsters=[],deathmobs=[],barrels=[],coins=[],potions=[],walls=[];
+monsters=[],deathmobs=[],barrels=[],coins=[],potions=[],walls=[];
 for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SK'));
 for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'FS'));
 for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SI'));
@@ -370,15 +370,11 @@ setInterval(function() {
         newheroy=newheroy - 60;
         newherox=newherox + 60;
     }
-    if (hero.x == NaN || hero.y == NaN) {
-        alert(newherox, newheroy);
-    }
 
     hero.to_y = newheroy;
     hero.to_x = newherox;
-    if (hero.to_x == NaN || hero.to_y == NaN) {
-        console.log(hero.to_x, hero.to_y);
-    }
+    console.log(hero.y, hero.to_y);
+    
     hero.nextStep();
     for(var i in monsters) monsters[i].nextStep();
     floor.fillStyle="black";floor.fillRect(0,0, floor.w,floor.h);
