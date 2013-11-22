@@ -310,12 +310,17 @@ floor.canvas.onclick=function(e) {
     floor.click_x=hero.x + mx * Math.cos(-a) - my * Math.sin(-a);
     floor.click_y=hero.y + mx * Math.sin(-a) + my * Math.cos(-a);
     if(isCanClick)if(processClick())return;
+    console.log(hero.to_x, floor.click_x);
+    console.log(hero.to_y, floor.click_y);
+
     hero.to_x=floor.click_x;
     hero.to_y=floor.click_y;
 }
 
+var beltKeys=[49,50,51,52,53,54,55,56,57,48], pressedKeys = [];
+
+
 window.onkeydown=function(e){
-    var beltKeys=[49,50,51,52,53,54,55,56,57,48];
     var beltIndex = beltKeys.indexOf(e.keyCode);
     if(beltIndex>=0){
         if(hero.belt.items[beltIndex] instanceof PotionHealth){
@@ -324,6 +329,39 @@ window.onkeydown=function(e){
         }
         return false;
     }
+    
+    pressedKeys[e.keyCode] = true;
+    console.log(pressedKeys);
+
+        console.log("checking ", e.keyCode);
+
+    if (pressedKeys[87]) {
+        console.log("w pressed");
+        hero.to_y=hero.to_y - 60;
+        hero.to_x=hero.to_x - 60;
+    }
+    if (pressedKeys[65]) {
+        console.log("a pressed");
+        hero.to_y=hero.to_y + 60;
+        hero.to_x=hero.to_x - 60;
+    }
+    if (pressedKeys[83]) {
+        console.log("s pressed");
+        hero.to_y=hero.to_y + 60;
+        hero.to_x=hero.to_x + 60;
+    }
+    if (pressedKeys[68]) {
+        console.log("d pressed");
+        hero.to_y=hero.to_y - 60;
+        hero.to_x=hero.to_x + 60;
+    }
+};
+
+window.onkeyup=function (e) {
+    pressedKeys[e.keyCode] = false;
+
+    console.log(pressedKeys);
+
     if(e.keyCode==9){
         showMap=!showMap;
         return false;
@@ -401,6 +439,7 @@ function processClick(){
     var zb=loadZb(true,true);
     var cx=(floor.click_x - floor.click_y)*acos,
         cy=(floor.click_x + floor.click_y)/2*asin;
+       // console.log(cx,cy);
     for(var i in zb){
         var m=zb[i]; 
         var spr=m.sprite;
@@ -410,7 +449,8 @@ function processClick(){
         var spr_w = spr.angles ? spr.width/spr.angles : spr.width;
         var spr_h = spr.steps ? spr.height/spr.steps : spr.height;
         if( cx >= sx-spr_w/2 && cx <= sx+spr_w/2 && cy >= sy-spr_h && cy <= sy){
-            m.use(hero)
+            m.use(hero);
+           // console.log(m.use);
             return true;
         }
     }
