@@ -1,4 +1,5 @@
-(function(undefined) {
+
+function game() {
 
 var imageCount=0;
 function loadImage(url,angles,steps,offsetX){
@@ -310,11 +311,11 @@ floor.canvas.onclick=function(e) {
     floor.click_x=hero.x + mx * Math.cos(-a) - my * Math.sin(-a);
     floor.click_y=hero.y + mx * Math.sin(-a) + my * Math.cos(-a);
     if(isCanClick)if(processClick())return;
-    console.log(hero.to_x, floor.click_x);
-    console.log(hero.to_y, floor.click_y);
+    //console.log(hero.to_x, floor.click_x);
+    //console.log(hero.to_y, floor.click_y);
 
-    hero.to_x=floor.click_x;
-    hero.to_y=floor.click_y;
+    //hero.to_x=floor.click_x;
+    //hero.to_y=floor.click_y;
 }
 
 var beltKeys=[49,50,51,52,53,54,55,56,57,48], pressedKeys = [];
@@ -369,10 +370,15 @@ setInterval(function() {
         newheroy=newheroy - 60;
         newherox=newherox + 60;
     }
+    if (hero.x == NaN || hero.y == NaN) {
+        alert(newherox, newheroy);
+    }
 
     hero.to_y = newheroy;
     hero.to_x = newherox;
-
+    if (hero.to_x == NaN || hero.to_y == NaN) {
+        console.log(hero.to_x, hero.to_y);
+    }
     hero.nextStep();
     for(var i in monsters) monsters[i].nextStep();
     floor.fillStyle="black";floor.fillRect(0,0, floor.w,floor.h);
@@ -781,4 +787,4 @@ function HeroBarbarian(x,y){
     }
 }
 
-})();
+};
