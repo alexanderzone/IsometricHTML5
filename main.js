@@ -249,7 +249,7 @@ var monsterMap={
     }
 };
 
-var hero=new HeroBarbarian(s*3,s*3);
+var hero=new HeroBarbarian(s*4,s*3);
 setInterval(function(){
     hero.health=Math.min(hero.health+10, hero.origin_health);
 },2000);
@@ -332,8 +332,22 @@ window.onkeydown=function(e){
     
     pressedKeys[e.keyCode] = true;
     console.log(pressedKeys);
+};
 
-        console.log("checking ", e.keyCode);
+window.onkeyup=function (e) {
+    pressedKeys[e.keyCode] = false;
+
+    console.log(pressedKeys);
+
+    if(e.keyCode==9){
+        showMap=!showMap;
+        return false;
+    }
+}
+
+var showMap=false;
+setInterval(function() {
+    if(imageCount>0) return;
 
     if (pressedKeys[87]) {
         console.log("w pressed");
@@ -355,22 +369,7 @@ window.onkeydown=function(e){
         hero.to_y=hero.to_y - 60;
         hero.to_x=hero.to_x + 60;
     }
-};
 
-window.onkeyup=function (e) {
-    pressedKeys[e.keyCode] = false;
-
-    console.log(pressedKeys);
-
-    if(e.keyCode==9){
-        showMap=!showMap;
-        return false;
-    }
-}
-
-var showMap=false;
-setInterval(function() {
-    if(imageCount>0) return;
     hero.nextStep();
     for(var i in monsters) monsters[i].nextStep();
     floor.fillStyle="black";floor.fillRect(0,0, floor.w,floor.h);
@@ -450,7 +449,6 @@ function processClick(){
         var spr_h = spr.steps ? spr.height/spr.steps : spr.height;
         if( cx >= sx-spr_w/2 && cx <= sx+spr_w/2 && cy >= sy-spr_h && cy <= sy){
             m.use(hero);
-           // console.log(m.use);
             return true;
         }
     }
