@@ -1,6 +1,15 @@
+function setCanvas(){
+    var w = $(window).width();
+    var h = $(window).height();
 
-function game() {
+    $("#floor").css("width", w + "px");
+    $("#floor").css("height", h + "px");
+}
 
+setCanvas();
+$(window).bind("resize", setCanvas);
+
+(function(undefined) {
 var imageCount=0;
 function loadImage(url,angles,steps,offsetX){
     imageCount++;
@@ -25,7 +34,7 @@ var level = {
     floor:{
         prefix:"dttool/output/1/",
         map:[
-            [   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,],
+            [   0, 756, 756, 756, 756, 756, 756, 756, 756, 756, 756,],
             [   0,   0, 756, 756, 756, 756, 756, 756,   0,   0,   0,],
             [   0, 756, 756, 756, 756, 756, 756, 756, 756, 756, 756,],
             [   0, 756, 756, 756, 756, 756, 756, 756,1140, 756, 756,],
@@ -38,8 +47,8 @@ var level = {
             [   0, 756, 756, 756, 756, 756, 756, 756, 756, 756, 756,],
             [   0, 756, 756,1908, 756, 756, 756, 756, 756, 756, 756,],
             [   0,   0, 756, 756, 756, 756, 756, 756,   0,   0,   0,],
-            [   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,],
-            [   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,],
+            [   0, 756, 756, 756, 756, 756, 756, 756, 756, 756, 756,],
+            [   0, 756, 756, 756, 756, 756, 756, 756, 756, 756, 756,],
         ],
         header:{
             372:false,
@@ -318,9 +327,11 @@ floor.canvas.onclick=function(e) {
     //hero.to_y=floor.click_y;
 }
 
-var beltKeys=[49,50,51,52,53,54,55,56,57,48], pressedKeys = [];
+var beltKeys=[49,50,51,52,53,54,55,56,57,48], pressedKeys = [], showMap=false;
 
 window.onkeydown=function(e){
+    //e.preventDefault();
+
     var beltIndex = beltKeys.indexOf(e.keyCode);
     if(beltIndex>=0){
         if(hero.belt.items[beltIndex] instanceof PotionHealth){
@@ -345,38 +356,52 @@ window.onkeyup=function (e) {
     }
 }
 
-var showMap=false;
-
-Number.prototype.clamp = function(min, max) {
-  return Math.min(Math.max(this, min), max);
-};
-
 function processKeys() {
 
     var newherox = hero.x, newheroy = hero.y;
-            if (pressedKeys[87]) {
-                console.log("w pressed");
-                newheroy=newheroy - 60;
-                newherox=newherox - 59;
+    if (pressedKeys[87]) {
+        console.log("w pressed");
+        newheroy=newheroy - 60;
+        newherox=newherox - 59;
+    }
+    if (pressedKeys[65]) {
+        console.log("a pressed");
+        newheroy=newheroy + 60;
+        newherox=newherox - 60;
+    }
+    if (pressedKeys[83]) {
+        console.log("s pressed");
+        newheroy=newheroy + 60;
+        newherox=newherox + 59;
+    }
+    if (pressedKeys[68]) {
+        console.log("d pressed");
+        newheroy=newheroy - 60;
+        newherox=newherox + 60;
+    }
+    if (pressedKeys[32]) {
+        console.log("space pressed");
+        var zb=loadZb(true,true);
+        var cx=(floor.click_x - floor.click_y)*acos,
+            cy=(floor.click_x + floor.click_y)/2*asin;
+           // console.log(cx,cy);
+        for(var i in zb){
+            var m=zb[i]; 
+            var spr=m.sprite;
+            var sx=(m.x - m.y)*acos+m.offset_x,
+                sy=(m.x + m.y)/2*asin+m.offset_y;
+            
+            var spr_w = spr.angles ? spr.width/spr.angles : spr.width;
+            var spr_h = spr.steps ? spr.height/spr.steps : spr.height;
+            if( cx >= sx-spr_w/2 && cx <= sx+spr_w/2 && cy >= sy-spr_h && cy <= sy){
+                m.use(hero);
+                return true;
             }
-            if (pressedKeys[65]) {
-                console.log("a pressed");
-                newheroy=newheroy + 60;
-                newherox=newherox - 60;
-            }
-            if (pressedKeys[83]) {
-                console.log("s pressed");
-                newheroy=newheroy + 60;
-                newherox=newherox + 59;
-            }
-            if (pressedKeys[68]) {
-                console.log("d pressed");
-                newheroy=newheroy - 60;
-                newherox=newherox + 60;
-            }
+        }
+    }
 
-    hero.to_y = newheroy.clamp(hero.y - 120, hero.y + 120);
-    hero.to_x = newherox.clamp(hero.x - 120, hero.x + 120);
+    hero.to_y = newheroy;
+    hero.to_x = newherox;
 
     //console.log(hero.y, hero.to_y);
 }
@@ -455,7 +480,7 @@ function processClick(){
     var zb=loadZb(true,true);
     var cx=(floor.click_x - floor.click_y)*acos,
         cy=(floor.click_x + floor.click_y)/2*asin;
-       // console.log(cx,cy);
+    console.log(cx,cy);
     for(var i in zb){
         var m=zb[i]; 
         var spr=m.sprite;
@@ -795,4 +820,4 @@ function HeroBarbarian(x,y){
     }
 }
 
-};
+})();
