@@ -250,7 +250,7 @@ var monsterMap={
     }
 };
 
-hero=new HeroBarbarian(s*4,s*3);
+hero=new HeroBarbarian(s*8,s*5);
 setInterval(function(){
     hero.health=Math.min(hero.health+10, hero.origin_health);
 },2000);
@@ -346,35 +346,44 @@ window.onkeyup=function (e) {
 }
 
 var showMap=false;
-setInterval(function() {
-    if(imageCount>0) return;
+
+Number.prototype.clamp = function(min, max) {
+  return Math.min(Math.max(this, min), max);
+};
+
+function processKeys() {
 
     var newherox = hero.x, newheroy = hero.y;
-    if (pressedKeys[87]) {
-        console.log("w pressed");
-        newheroy=newheroy - 60;
-        newherox=newherox - 60;
-    }
-    if (pressedKeys[65]) {
-        console.log("a pressed");
-        newheroy=newheroy + 60;
-        newherox=newherox - 60;
-    }
-    if (pressedKeys[83]) {
-        console.log("s pressed");
-        newheroy=newheroy + 60;
-        newherox=newherox + 60;
-    }
-    if (pressedKeys[68]) {
-        console.log("d pressed");
-        newheroy=newheroy - 60;
-        newherox=newherox + 60;
-    }
+            if (pressedKeys[87]) {
+                console.log("w pressed");
+                newheroy=newheroy - 60;
+                newherox=newherox - 59;
+            }
+            if (pressedKeys[65]) {
+                console.log("a pressed");
+                newheroy=newheroy + 60;
+                newherox=newherox - 60;
+            }
+            if (pressedKeys[83]) {
+                console.log("s pressed");
+                newheroy=newheroy + 60;
+                newherox=newherox + 59;
+            }
+            if (pressedKeys[68]) {
+                console.log("d pressed");
+                newheroy=newheroy - 60;
+                newherox=newherox + 60;
+            }
 
-    hero.to_y = newheroy;
-    hero.to_x = newherox;
-    console.log(hero.y, hero.to_y);
-    
+    hero.to_y = newheroy.clamp(hero.y - 120, hero.y + 120);
+    hero.to_x = newherox.clamp(hero.x - 120, hero.x + 120);
+
+    //console.log(hero.y, hero.to_y);
+}
+
+function update() {
+    if(imageCount>0) return;
+    processKeys();
     hero.nextStep();
     for(var i in monsters) monsters[i].nextStep();
     floor.fillStyle="black";floor.fillRect(0,0, floor.w,floor.h);
@@ -382,7 +391,10 @@ setInterval(function() {
     renderHeroHealth()
     renderHeroBelt();
     if(showMap) renderMap();
-}, 66);
+    console.log("finished update");
+}
+
+setInterval(update, 66);
 
 function renderHeroHealth(){
     var radius=80, padding=20;
