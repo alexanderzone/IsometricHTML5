@@ -330,8 +330,6 @@ floor.canvas.onclick=function(e) {
 var beltKeys=[49,50,51,52,53,54,55,56,57,48], pressedKeys = [], showMap=false;
 
 window.onkeydown=function(e){
-    //e.preventDefault();
-
     var beltIndex = beltKeys.indexOf(e.keyCode);
     if(beltIndex>=0){
         if(hero.belt.items[beltIndex] instanceof PotionHealth){
@@ -340,16 +338,9 @@ window.onkeydown=function(e){
         }
         return false;
     }
-    
-    pressedKeys[e.keyCode] = true;
-    console.log(pressedKeys);
 };
 
 window.onkeyup=function (e) {
-    pressedKeys[e.keyCode] = false;
-
-    console.log(pressedKeys);
-
     if(e.keyCode==9){
         showMap=!showMap;
         return false;
@@ -359,28 +350,23 @@ window.onkeyup=function (e) {
 function processKeys() {
 
     var newherox = hero.x, newheroy = hero.y;
-    if (pressedKeys[87]) {
-        console.log("w pressed");
+    if (keydown.w || keydown.up) {
         newheroy=newheroy - 60;
         newherox=newherox - 59;
     }
-    if (pressedKeys[65]) {
-        console.log("a pressed");
+    if (keydown.a || keydown.left) {
         newheroy=newheroy + 60;
         newherox=newherox - 60;
     }
-    if (pressedKeys[83]) {
-        console.log("s pressed");
+    if (keydown.s || keydown.down) {
         newheroy=newheroy + 60;
         newherox=newherox + 59;
     }
-    if (pressedKeys[68]) {
-        console.log("d pressed");
+    if (keydown.d || keydown.right) {
         newheroy=newheroy - 60;
         newherox=newherox + 60;
     }
-    if (pressedKeys[32]) {
-        console.log("space pressed");
+    if (keydown.space) {
         var zb=loadZb(true,true);
         var cx=(floor.click_x - floor.click_y)*acos,
             cy=(floor.click_x + floor.click_y)/2*asin;
@@ -402,6 +388,11 @@ function processKeys() {
 
     hero.to_y = newheroy;
     hero.to_x = newherox;
+
+    if (keydown.tab) {
+            showMap=!showMap;
+        return false;
+    }
 
     //console.log(hero.y, hero.to_y);
 }
