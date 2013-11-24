@@ -266,9 +266,9 @@ setInterval(function(){
 
 // aggresive mobs
 monsters=[],deathmobs=[],barrels=[],coins=[],potions=[],walls=[];
-for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SK'));
-for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'FS'));
-for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SI'));
+for(var i=0;i<1;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SK'));
+//for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'FS'));
+//for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SI'));
 //for(var i=0;i<2;i++) barrels.push(new Barrel(randomx(),randomy()));
 for(var i=0;i<2;i++) potions.push(new PotionHealth(randomx(), randomy()));
 
@@ -367,23 +367,7 @@ function processKeys() {
         newherox=newherox + 60;
     }
     if (keydown.space) {
-        var zb=loadZb(true,true);
-        var cx=(floor.click_x - floor.click_y)*acos,
-            cy=(floor.click_x + floor.click_y)/2*asin;
-           // console.log(cx,cy);
-        for(var i in zb){
-            var m=zb[i]; 
-            var spr=m.sprite;
-            var sx=(m.x - m.y)*acos+m.offset_x,
-                sy=(m.x + m.y)/2*asin+m.offset_y;
-            
-            var spr_w = spr.angles ? spr.width/spr.angles : spr.width;
-            var spr_h = spr.steps ? spr.height/spr.steps : spr.height;
-            if( cx >= sx-spr_w/2 && cx <= sx+spr_w/2 && cy >= sy-spr_h && cy <= sy){
-                m.use(hero);
-                return true;
-            }
-        }
+        hero.doAttack();
     }
 
     hero.to_y = newheroy;
@@ -402,15 +386,22 @@ function update() {
     processKeys();
     hero.nextStep();
     for(var i in monsters) monsters[i].nextStep();
-    floor.fillStyle="black";floor.fillRect(0,0, floor.w,floor.h);
+}
+
+function render() {
+    floor.fillStyle="black";
+    floor.fillRect(0,0, floor.w,floor.h);
     renderFloor();
     renderHeroHealth()
     renderHeroBelt();
     if(showMap) renderMap();
-    console.log("finished update");
 }
 
-setInterval(update, 66);
+var FPS = 20;
+setInterval(function() {
+    update();
+    render();
+}, 1000/FPS);
 
 function renderHeroHealth(){
     var radius=80, padding=20;
@@ -764,8 +755,10 @@ function AgressiveMob(x,y,name){
             if(this.step==(this.attack.steps-1)){
                 this.currentState=this.stay;
                 this.step=-1;
-                if(this.attacked){
+                if(this.attacked){ //has a target
+                    //damage the monster
                     this.attacked.damage(this.getDamage());
+                    //clear target
                     this.attacked=null;
                 }
             }
@@ -808,6 +801,11 @@ function HeroBarbarian(x,y){
     this.currentDamage=120;
     this.getDamage=function(){
         return this.currentDamage * ( Math.random() <= this.criticalDamage ? 4 : 1 );
+    }
+    this.doAttack=function(){
+        //this.rotateTo(mob);
+        this.setState(this.attack);
+        this.attacked=monsters[0];            
     }
 }
 
