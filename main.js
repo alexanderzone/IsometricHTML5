@@ -6,8 +6,8 @@ function setCanvas(){
     $("#floor").css("height", h + "px");
 }
 
-setCanvas();
-$(window).bind("resize", setCanvas);
+//setCanvas();
+//$(window).bind("resize", setCanvas);
 
 (function(undefined) {
 var imageCount=0;
