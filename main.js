@@ -404,7 +404,7 @@ setInterval(function() {
 }, 1000/FPS);
 
 function renderHeroHealth(){
-    var radius=80, padding=20;
+    var radius=40, padding=20;
     floor.save();
     floor.globalAlpha=0.4;
     // draw health colb
@@ -433,7 +433,7 @@ function renderHeroBelt(){
     for(var i=0;i<hero.belt.size;i++){
         floor.drawImage(tile, 
             tw*2, th*3, tw, th,
-            200+tw*i, 600, tw, th);
+            120+tw*i, 430, tw, th);
         var p = hero.belt.items[i];
         if(p){
             floor.drawImage(tile, 
@@ -781,6 +781,27 @@ function AgressiveMob(x,y,name){
     }
 }
 
+function checkCollision(){
+    var zb=loadZb(true,true);
+    var cx=(floor.click_x - floor.click_y)*acos,
+        cy=(floor.click_x + floor.click_y)/2*asin;
+    console.log(cx,cy);
+    for(var i in zb){
+        var m=zb[i]; 
+        var spr=m.sprite;
+        var sx=(m.x - m.y)*acos+m.offset_x,
+            sy=(m.x + m.y)/2*asin+m.offset_y;
+        
+        var spr_w = spr.angles ? spr.width/spr.angles : spr.width;
+        var spr_h = spr.steps ? spr.height/spr.steps : spr.height;
+        if( cx >= sx-spr_w/2 && cx <= sx+spr_w/2 && cy >= sy-spr_h && cy <= sy){
+            m.use(hero);
+            return true;
+        }
+    }
+    return false;
+}
+
 function HeroBarbarian(x,y){
     AgressiveMob.call(this,x,y,"BA");
     this.attackOffset=40;
@@ -802,10 +823,18 @@ function HeroBarbarian(x,y){
     this.getDamage=function(){
         return this.currentDamage * ( Math.random() <= this.criticalDamage ? 4 : 1 );
     }
+    this.checkHit = function(){
+        var l=this.currentState.angles;
+        var sy = this.infront() - this.x;
+        var sx = this.infront() - this.y;
+        this.angle=Math.round((Math.atan2(sy, sx)/Math.PI+2.75)*l/2+l/2)%l
+    }
+    this.rotateTo = function(point){
+        this.rotate(point.x-this.x,point.y-this.y);
+    }
     this.doAttack=function(){
-        //this.rotateTo(mob);
         this.setState(this.attack);
-        this.attacked=monsters[0];            
+        this.attacked=/*this.checkHit();*/monsters[0];  
     }
 }
 
