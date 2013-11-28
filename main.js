@@ -266,11 +266,16 @@ setInterval(function(){
 
 // aggresive mobs
 monsters=[],deathmobs=[],barrels=[],coins=[],potions=[],walls=[];
-for(var i=0;i<1;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SK'));
+for(var i=0;i<1;i++) monsters.push(new AgressiveMob(hero.x - 100,hero.y - 100, 'SK'));
 //for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'FS'));
 //for(var i=0;i<2;i++) monsters.push(new AgressiveMob(randomx(),randomy(), 'SI'));
 //for(var i=0;i<2;i++) barrels.push(new Barrel(randomx(),randomy()));
 for(var i=0;i<2;i++) potions.push(new PotionHealth(randomx(), randomy()));
+
+setInterval(function(){
+    monsters[0].health=Math.min(monsters[0].health+100, monsters[0].origin_health);
+},2000);
+
 
 for(var y in level.wall.map){
     for(var x in level.wall.map[y]){
